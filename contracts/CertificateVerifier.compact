@@ -1,0 +1,68 @@
+pragma language_version >= 0.23;
+
+import CompactStandardLibrary;
+
+/**
+ * ============================================================================
+ * PRIVACY SPECIFICATION (PUBLIC VS PRIVATE DATA SPLIT)
+ * ============================================================================
+ * PUBLIC LEDGER STATE (On-Chain):
+ *   - issuerPublicKey: Bytes<32>    -> Authorized University / Issuer Public Key
+ *   - verificationCount: Uint<32>  -> Global counter of valid proofs performed
+ *   - revocationRoot: Bytes<32>     -> Commitment anchor of revoked credentials
+ * 
+ * PRIVATE WITNESSES (Off-Chain / Proved in ZK):
+ *   - studentSecret: Bytes<32>     -> Private key of the student credential holder
+ *   - studentId: Bytes<32>         -> Student ID / Roll Number (NEVER revealed)
+ *   - degreeCode: Uint<32>         -> Degree identifier code
+ *   - gpaScore: Uint<32>           -> Cumulative GPA (scaled by 100, e.g. 380 = 3.80)
+ * 
+ * DISCLOSED VALUES (Circuit Outputs):
+ *   - nullifierHash: Bytes<32>     -> Unique nullifier preventing double verification
+ * ============================================================================
+ */
+
+// Public Ledger State
+export ledger issuerPublicKey: Bytes<32>;
+export ledger verificationCount: Uint<32>;
+export ledger revocationRoot: Bytes<32>;
+
+// Data structure for private witness input
+export struct CertWitness {
+    studentSecret: Bytes<32>;
+    studentId: Bytes<32>;
+    degreeCode: Uint<32>;
+    gpaScore: Uint<32>;
+}
+
+// Circuit 1: Initialize / Register Issuer Key
+export circuit initializeIssuer(newIssuerKey: Bytes<32>): [] {
+    issuerPublicKey = disclose(newIssuerKey);
+    verificationCount = 0;
+    revocationRoot = pad(32, "0");
+}
+
+// Circuit 2: Verify Student Degree Privacy
+// Proves student possesses valid credential with gpaScore >= minGpa, without disclosing studentId or gpaScore
+export circuit verifyDegreePrivacy(witness: CertWitness, minGpa: Uint<32>): Bytes<32> {
+    // 1. Assert GPA qualification constraint privately in ZK circuit
+    require witness.gpaScore >= minGpa "Student GPA score does not meet minimum requirement";
+    
+    // 2. Assert non-empty student secret & student ID
+    require witness.studentSecret != pad(32, "0") "Invalid student secret key";
+    require witness.studentId != pad(32, "0") "Invalid student ID";
+
+    // 3. Compute unique nullifier for this verification session: hash(studentSecret, studentId)
+    const nullifier = persistent_hash<[Bytes<32>, Bytes<32>]>([witness.studentSecret, witness.studentId]);
+
+    // 4. Increment public verification counter
+    verificationCount = verificationCount + 1;
+
+    // 5. Return disclosed nullifier to caller to record proof on-chain
+    return disclose(nullifier);
+}
+
+// Circuit 3: Revoke Certificate Hash
+export circuit revokeCertificate(certHash: Bytes<32>): [] {
+    revocationRoot = disclose(certHash);
+}

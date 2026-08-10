@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Compact build output
+contracts/managed/
+managed/
+dist/
+
+# Midnight network & wallet state files (SECRETS)
+.midnight-state.json
+.midnight-wallet-state/
+*.seed
+
+# Environment local overrides
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs and OS files
+*.log
+.DS_Store
+Thumbs.db

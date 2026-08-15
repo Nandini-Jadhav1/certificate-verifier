@@ -1,4 +1,4 @@
-import { NetworkConfig } from './network';
+import { NetworkConfig } from './network.js';
 
 export interface WalletContext {
   address: string;

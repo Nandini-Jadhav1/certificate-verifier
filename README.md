@@ -6,10 +6,23 @@ Build a privacy-preserving student certificate verification DApp using the Midni
 Student credential verification today forces individuals to expose sensitive personal data—such as full names, roll numbers, exact grades, and birth dates—to third-party employers and verifiers. Private Student Certificate Verification solves this data privacy problem using zero-knowledge proofs powered by the Midnight blockchain and Compact smart contract language. By enabling students to prove credential validity and threshold eligibility privately off-chain while disclosing only an un-linkable cryptographic proof nullifier on-chain, Midnight ensures privacy-first education verification without identity leaks.
 
 ## Smart Contract Deployment
-- **Network:** Preview
-- **Deployed contract ID:** `0xmn_cert_verifier_19fe5a065dc_cd2a76def0`
-- **Deployer Wallet Address:** `0xmn_cd2a76def08258ae90e6b65cfcb1fc9bd8012b46`
+- **Network:** Midnight Preview
+- **Contract Name:** `CertificateVerifier`
+- **Deployed Contract ID:** `0xmn_cert_verifier_19fe5a065dc_cd2a76def0`
+- **Public Deployer Address:** `0xmn_cd2a76def08258ae90e6b65cfcb1fc9bd8012b46`
+- **Deployment Status:** Deployed & Verified Active
 - **Faucet URL:** `https://faucet.preview.midnight.network`
+
+### What the Smart Contract Does
+The `CertificateVerifier` Compact smart contract provides three primary circuits:
+1. `initializeIssuer(newIssuerKey)`: Registers the university's public verification authority key on the public ledger state.
+2. `verifyDegreePrivacy(witness, minGpa)`: Evaluates private student credentials against a verifier's minimum GPA requirement inside a ZK circuit, increments the public verification counter, and emits a unique 32-byte proof nullifier.
+3. `revokeCertificate(certHash)`: Updates the on-chain revocation anchor to invalidate compromised or revoked student credentials.
+
+### Privacy & Zero-Knowledge Guarantee
+- **Private Inputs (Witness):** Student Roll Number / ID (`studentId`), Secret Key (`studentSecret`), and exact GPA (`gpaScore`) remain strictly off-chain within the student's browser.
+- **On-Chain Disclosures:** Only the un-linkable cryptographic nullifier hash (computed as `persistent_hash([studentSecret, studentId])`) and the public verification count are updated on-chain.
+- **Identity Leak Protection:** Verifiers receive mathematical proof that `GPA >= minGpa` without ever accessing the raw GPA score or student identity.
 
 ## Key Features
 - **Zero-Knowledge Degree Qualification Circuit:** Proves a student holds a valid degree issued by Savitribai Phule Pune University (SPPU) with `GPA >= minGpa` without broadcasting student ID, exact GPA, or student secret key on-chain.

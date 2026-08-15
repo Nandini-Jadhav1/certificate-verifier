@@ -6,6 +6,8 @@ node_modules/
 contracts/managed/
 managed/
 dist/
+frontend/dist/
+*.tsbuildinfo
 
 # Midnight network & wallet state files (SECRETS)
 .midnight-state.json

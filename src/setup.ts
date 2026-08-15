@@ -1,5 +1,5 @@
 import { execSync } from 'node:child_process';
-import { resolveNetwork } from './network';
+import { resolveNetwork } from './network.js';
 
 async function setup() {
   console.log('=== Setting up Midnight Private Student Certificate Verification ===');

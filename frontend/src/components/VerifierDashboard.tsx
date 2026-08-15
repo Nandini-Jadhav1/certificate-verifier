@@ -1,17 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { CertificateVerifierContract } from '../contracts/managed/CertificateVerifier/index';
-import { Database, ShieldAlert, Award, FileCheck, CheckCircle2 } from 'lucide-react';
+import { Database, FileCheck } from 'lucide-react';
+import { CONTRACT_ADDRESS, INDEXER_URL } from '../config';
 
 export const VerifierDashboard: React.FC<{
   lastNullifier: string | null;
 }> = ({ lastNullifier }) => {
   const [verificationCount, setVerificationCount] = useState<number>(1);
-  const [contractAddress, setContractAddress] = useState<string>(
-    import.meta.env.VITE_CONTRACT_ADDRESS || '0xmn_cert_verifier_preview_active'
-  );
-  const [indexerUrl, setIndexerUrl] = useState<string>(
-    import.meta.env.VITE_INDEXER_URL || 'https://indexer.preview.midnight.network'
-  );
+  const [contractAddress] = useState<string>(CONTRACT_ADDRESS);
+  const [indexerUrl] = useState<string>(INDEXER_URL);
 
   useEffect(() => {
     if (lastNullifier) {

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { WalletConnect } from './components/WalletConnect';
-import Wallet from './components/Wallet';
 import { CertificateForm } from './components/CertificateForm';
 import { VerifierDashboard } from './components/VerifierDashboard';
 import { Shield, Lock } from 'lucide-react';
@@ -37,9 +36,6 @@ export function App() {
             Prove your SPPU university degree qualification to employers with complete zero-knowledge data protection.
             Your name, roll number, and exact GPA score are <strong>never exposed on-chain</strong>.
           </p>
-
-          {/* Integrated Web3 Wallet Provider */}
-          <Wallet />
         </header>
 
         <div className="dashboard-grid">

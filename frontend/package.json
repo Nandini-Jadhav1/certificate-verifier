@@ -9,7 +9,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "ethers": "^6.17.0",
     "lucide-react": "^0.475.0",
     "private-student-certificate-verification": "file:..",
     "react": "^18.3.1",

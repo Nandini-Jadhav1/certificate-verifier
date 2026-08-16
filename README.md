@@ -5,13 +5,13 @@ Build a privacy-preserving student certificate verification DApp using the Midni
 ## Project Vision
 Student credential verification today forces individuals to expose sensitive personal data—such as full names, roll numbers, exact grades, and birth dates—to third-party employers and verifiers. Private Student Certificate Verification solves this data privacy problem using zero-knowledge proofs powered by the Midnight blockchain and Compact smart contract language. By enabling students to prove credential validity and threshold eligibility privately off-chain while disclosing only an un-linkable cryptographic proof nullifier on-chain, Midnight ensures privacy-first education verification without identity leaks.
 
-## Smart Contract Deployment
-- **Network:** Midnight Preview
-- **Contract Name:** `CertificateVerifier`
-- **Deployed Contract ID:** `0xmn_cert_verifier_19fe5a065dc_cd2a76def0`
-- **Public Deployer Address:** `0xmn_cd2a76def08258ae90e6b65cfcb1fc9bd8012b46`
-- **Deployment Status:** Deployed & Verified Active
-- **Faucet URL:** `https://faucet.preview.midnight.network`
+### Smart Contract Deployment
+
+* **Network:** Preview
+* **Deployed contract ID:**
+  `0x0200f15cc7c3500333c0fa3efaa9cc326b2bddd7bf63b5119a32c8544d87`
+* **Deployer Address:**
+  `mn_preview_15c5a5399b73b87d0bc29f339151d64634751fe`
 
 ### What the Smart Contract Does
 The `CertificateVerifier` Compact smart contract provides three primary circuits:

@@ -87,7 +87,7 @@ export function useMidnight() {
         state?.address ||
         state?.account ||
         state?.accounts?.[0] ||
-        '0xmn_cd2a76def08258ae90e6b65cfcb1fc9bd8012b46';
+        'mn_preview_15c5a5399b73b87d0bc29f339151d64634751fe';
 
       const network = state?.network || targetNetwork;
 

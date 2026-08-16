@@ -5,6 +5,10 @@ Build a privacy-preserving student certificate verification DApp using the Midni
 ## Project Vision
 Student credential verification today forces individuals to expose sensitive personal data—such as full names, roll numbers, exact grades, and birth dates—to third-party employers and verifiers. Private Student Certificate Verification solves this data privacy problem using zero-knowledge proofs powered by the Midnight blockchain and Compact smart contract language. By enabling students to prove credential validity and threshold eligibility privately off-chain while disclosing only an un-linkable cryptographic proof nullifier on-chain, Midnight ensures privacy-first education verification without identity leaks.
 
+## Live Application Deployment
+- **Vercel Production DApp:** [https://certificate-verifier-ivory.vercel.app](https://certificate-verifier-ivory.vercel.app)
+- **Alternative Mirror Domain:** [https://certificate-verifier-phi.vercel.app](https://certificate-verifier-phi.vercel.app)
+
 ### Smart Contract Deployment
 
 * **Network:** Preview

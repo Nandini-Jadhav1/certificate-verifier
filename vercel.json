@@ -1,7 +1,6 @@
 {
   "buildCommand": "npm run frontend:build",
   "outputDirectory": "frontend/dist",
-  "framework": "vite",
   "rewrites": [
     {
       "source": "/(.*)",
@@ -9,3 +8,4 @@
     }
   ]
 }
+

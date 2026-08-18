@@ -1,0 +1,31 @@
+{
+  "contractName": "CertificateVerifier",
+  "version": "1.0.0",
+  "compilerVersion": "compactc-0.16.0",
+  "circuits": {
+    "initializeIssuer": {
+      "privateInputs": 1,
+      "publicState": [
+        "issuerPublicKey"
+      ]
+    },
+    "verifyDegreePrivacy": {
+      "privateInputs": 4,
+      "publicState": [
+        "verificationCount"
+      ],
+      "output": "nullifier"
+    },
+    "revokeCertificate": {
+      "privateInputs": 1,
+      "publicState": [
+        "revocationRoot"
+      ]
+    }
+  },
+  "artifacts": {
+    "wasm": "circuit.wasm",
+    "provingKey": "proving_key",
+    "verifyingKey": "verifying_key"
+  }
+}

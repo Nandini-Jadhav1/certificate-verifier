@@ -3,8 +3,6 @@ node_modules/
 .pnpm-store/
 
 # Compact build output
-contracts/managed/
-managed/
 dist/
 frontend/dist/
 *.tsbuildinfo

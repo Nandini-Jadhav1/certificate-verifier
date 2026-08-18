@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "compile": "npx tsx scripts/compile-contract.ts",
-    "build": "npx tsc --noEmit",
+    "build": "npm run compile && npm run frontend:build",
     "setup": "npx tsx src/setup.ts",
     "deploy": "npx tsx src/deploy.ts",
     "cli": "npx tsx src/cli.ts",

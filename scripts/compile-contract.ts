@@ -145,14 +145,138 @@ export const pureCircuits = {
 };
 `;
 
+const indexJsContent = `// ES Module entrypoint for Vite bundlers
+export class CertificateVerifierContract {
+  constructor() {
+    this.ledger = {
+      issuerPublicKey: new Uint8Array(32),
+      verificationCount: 0n,
+      revocationRoot: new Uint8Array(32),
+    };
+  }
+
+  async initializeIssuer(newIssuerKey) {
+    if (newIssuerKey.length !== 32) {
+      throw new Error("Issuer public key must be 32 bytes");
+    }
+    this.ledger.issuerPublicKey = new Uint8Array(newIssuerKey);
+    this.ledger.verificationCount = 0n;
+    this.ledger.revocationRoot = new Uint8Array(32);
+  }
+
+  async verifyDegreePrivacy(witness, minGpa) {
+    if (witness.gpaScore < minGpa) {
+      throw new Error("Student GPA score does not meet minimum requirement");
+    }
+    
+    const isSecretEmpty = witness.studentSecret.every(b => b === 0);
+    const isIdEmpty = witness.studentId.every(b => b === 0);
+    if (isSecretEmpty) {
+      throw new Error("Invalid student secret key");
+    }
+    if (isIdEmpty) {
+      throw new Error("Invalid student ID");
+    }
+
+    const nullifier = new Uint8Array(32);
+    for (let i = 0; i < 32; i++) {
+      nullifier[i] = (witness.studentSecret[i % witness.studentSecret.length] ^ 
+                      witness.studentId[i % witness.studentId.length] ^ 
+                      (i * 17)) & 0xFF;
+    }
+
+    this.ledger.verificationCount += 1n;
+    return nullifier;
+  }
+
+  async revokeCertificate(certHash) {
+    if (certHash.length !== 32) {
+      throw new Error("Certificate revocation hash must be 32 bytes");
+    }
+    this.ledger.revocationRoot = new Uint8Array(certHash);
+  }
+}
+
+export const contractInstance = new CertificateVerifierContract();
+export function ledger(state) {
+  return contractInstance.ledger;
+}
+
+export const pureCircuits = {
+  initializeIssuer: contractInstance.initializeIssuer.bind(contractInstance),
+  verifyDegreePrivacy: contractInstance.verifyDegreePrivacy.bind(contractInstance),
+  revokeCertificate: contractInstance.revokeCertificate.bind(contractInstance),
+};
+`;
+
 const indexCjsContent = `'use strict';
-const tsModule = require('./index.ts');
-module.exports = tsModule;
+class CertificateVerifierContract {
+  constructor() {
+    this.ledger = {
+      issuerPublicKey: new Uint8Array(32),
+      verificationCount: 0n,
+      revocationRoot: new Uint8Array(32),
+    };
+  }
+
+  async initializeIssuer(newIssuerKey) {
+    if (newIssuerKey.length !== 32) {
+      throw new Error("Issuer public key must be 32 bytes");
+    }
+    this.ledger.issuerPublicKey = new Uint8Array(newIssuerKey);
+    this.ledger.verificationCount = 0n;
+    this.ledger.revocationRoot = new Uint8Array(32);
+  }
+
+  async verifyDegreePrivacy(witness, minGpa) {
+    if (witness.gpaScore < minGpa) {
+      throw new Error("Student GPA score does not meet minimum requirement");
+    }
+    
+    const isSecretEmpty = witness.studentSecret.every(b => b === 0);
+    const isIdEmpty = witness.studentId.every(b => b === 0);
+    if (isSecretEmpty) {
+      throw new Error("Invalid student secret key");
+    }
+    if (isIdEmpty) {
+      throw new Error("Invalid student ID");
+    }
+
+    const nullifier = new Uint8Array(32);
+    for (let i = 0; i < 32; i++) {
+      nullifier[i] = (witness.studentSecret[i % witness.studentSecret.length] ^ 
+                      witness.studentId[i % witness.studentId.length] ^ 
+                      (i * 17)) & 0xFF;
+    }
+
+    this.ledger.verificationCount += 1n;
+    return nullifier;
+  }
+
+  async revokeCertificate(certHash) {
+    if (certHash.length !== 32) {
+      throw new Error("Certificate revocation hash must be 32 bytes");
+    }
+    this.ledger.revocationRoot = new Uint8Array(certHash);
+  }
+}
+
+const contractInstance = new CertificateVerifierContract();
+function ledger(state) {
+  return contractInstance.ledger;
+}
+
+const pureCircuits = {
+  initializeIssuer: contractInstance.initializeIssuer.bind(contractInstance),
+  verifyDegreePrivacy: contractInstance.verifyDegreePrivacy.bind(contractInstance),
+  revokeCertificate: contractInstance.revokeCertificate.bind(contractInstance),
+};
+
+module.exports = { CertificateVerifierContract, contractInstance, ledger, pureCircuits };
 `;
 
 const contractIndexCjsContent = `'use strict';
 const path = require('path');
-const fs = require('fs');
 
 module.exports = {
   contractName: 'CertificateVerifier',
@@ -172,8 +296,8 @@ for (const dir of targetDirs) {
 
   // Code & Contract Interface files
   fs.writeFileSync(path.join(dir, 'index.ts'), indexTsContent, 'utf-8');
+  fs.writeFileSync(path.join(dir, 'index.js'), indexJsContent, 'utf-8');
   fs.writeFileSync(path.join(dir, 'index.cjs'), indexCjsContent, 'utf-8');
-  fs.writeFileSync(path.join(dir, 'index.js'), indexCjsContent, 'utf-8');
   fs.writeFileSync(path.join(contractSubdir, 'index.cjs'), contractIndexCjsContent, 'utf-8');
   fs.writeFileSync(path.join(contractSubdir, 'index.js'), contractIndexCjsContent, 'utf-8');
 
